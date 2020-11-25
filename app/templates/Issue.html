@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+{% if current_user.is_authenticated %}
+
+<h1>Журнал выдачи:</h1>
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+   
+      <th scope="col">ФИО</th>
+      <th scope="col">Название книги</th>
+      <th scope="col">Автор</th>
+      <th scope="col">Статус</th>
+      <th scope="col"></th>
+    
+    </tr>
+  </thead>
+  <tbody>
+    {% for check_book in user_list %}
+    {% if check_book.user == current_user.id %} 
+    <tr>
+     
+      <td>{{ userbooks.query.filter_by(id = check_book.id).first().id }}</td>
+      <td>{{ user.query.filter_by(id = check_book.user).first().fullname }}</td>
+      <td>{{ book.query.filter_by(id = check_book.book).first().name }}</td>
+      <td>{{ book.query.filter_by(id = check_book.book).first().author }}</td>
+      <td>{{ status.query.filter_by(id = check_book.status).first().condition }}</td>
+      
+      <td>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Действия
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="{{ url_for('main.delete', id = book.id)}}">Удалить</a>
+           
+          </div>
+        </div>
+        
+ </td>
+      <!-- userbooks.query.filter_by(id = check_book.role_id).first().name_role -->
+
+    {%  endif %}
+        <!-- 
+          role.query.filter_by(id = 1).first().name_role
+        select name_role from role where id = 1; -->
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% else %}
+
+
+<h2>Для доступа к журналу выдачи необходимо авторизироваться. </h2>
+
+{% endif %}
+
+{% endblock %}

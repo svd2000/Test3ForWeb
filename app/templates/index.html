@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Все книги:</h1>
+<table class="table table-dark">
+  <thead>
+      <tr>
+          <td>№</td>
+          <td>Название</td>
+          <td>Год издания</td>
+          <td>Автор</td>
+          <td>Колличество</td>
+          <td></td>
+        </tr>
+  </thead>
+  <tbody>
+          {% for book in books_list %}
+          <tr>
+            <td>{{book.id}}</td>
+            <td>{{book.name}}</td>
+            <td>{{book.author}}</td>
+            <td>{{book.year}}</td>
+            <td>{{book.quantity}}</td>
+            {% if current_user.role_id == 1 %}
+            <td>
+              <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Действия
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  
+                  <a class="dropdown-item" href="#">Редактировать</a>
+                  <a class="dropdown-item" href="#">Удалить</a>
+                </div>
+              </div>
+           </td>
+            {% endif %}
+            {% if current_user.role_id == 2 %}
+                <td>
+              <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Действия
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  
+                  <a class="dropdown-item" href="#">Редактировать</a>
+                </div>
+              </div>
+           </td>
+            {% endif %}
+            {% if current_user.role_id == 3 %}
+            <td>
+              <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Действия
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <a class="dropdown-item" href="{{ url_for('main.add', id = book.id)}}">Взять книгу</a>
+                 
+                </div>
+              </div>
+              
+       </td>
+       {% endif %}
+       {% if current_user.is_authenticated %}
+     {% else %}
+     <td>
+     <button class="btn btn-outline-success" type="button"
+       onclick="document.location='/login'">Взять книгу</button>
+     {% endif %}
+
+    </td>
+          </tr>
+
+          
+          {%  endfor %}
+        </tbody>
+        
+      </table>
+
+{% if current_user.is_authenticated %}
+
+
+
+{% else %}
+
+
+<h2>Необходимо авторизироваться</h2>
+
+{% endif %}
+
+{% endblock %}
