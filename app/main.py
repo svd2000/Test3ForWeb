@@ -71,12 +71,69 @@ def delete(id):
     if request.method == "GET":
         userbooks = UsersBook
         new_user = current_user.id
-        bad_appeal = userbooks.query.filter_by(user=new_user).first()
+        bad_appeal = userbooks.query.filter_by(id=id).first()
         if not bad_appeal:
             return redirect(url_for('main.issue'))
         db.session.delete(bad_appeal)
         db.session.commit()
     return redirect(url_for('main.issue'))    
+
+@main.route('/set/<id>',methods=['POST','GET'])
+
+def set(id):
+
+    if request.method == 'POST':
+        userbooks = UsersBook
+        bad_issue= userbooks.query.filter_by(id=id).first()
+
+
+
+
+        if not bad_issue:
+
+            books_list = Books
+
+            issue_list = Issue_log.query.order_by(Issue_log.date_log.desc())
+
+            status_list = Status
+
+            user = User
+
+            role = Role
+
+            error = "Изменения уже приступили в силу"
+
+            return render_template('issue.html',books_list=books_list,issue_list=issue_list,status_list=status_list,user=user,role=role,error = error)
+
+
+
+
+
+
+
+        new_date = bad_issue.date_log
+
+        new_book = bad_issue.book_log
+
+
+
+
+        user_id = request.form['new_user_issue']
+
+        new_status = request.form['new_status']
+
+
+
+
+        db.session.delete(bad_issue)
+
+        new_issue = Issue_log(date_log=new_date , user_log=user_id ,book_log=new_book,status_log=new_status )
+
+        db.session.add(new_issue)
+
+        db.session.commit()
+
+        return render_template('index.html')
     # else:
     #     book = Book.query.filter_by(id = id).first()
     #     issue = UsersBook
