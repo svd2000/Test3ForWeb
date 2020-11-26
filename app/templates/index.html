@@ -2,6 +2,12 @@
 
 {% block content %}
 
+{% if error %}
+<div class="alert alert-danger" role="alert">
+  {{ error }}
+</div>
+{% endif %}
+
 <h1>Все книги:</h1>
 <table class="table table-dark">
   <thead>
@@ -11,7 +17,9 @@
           <td>Год издания</td>
           <td>Автор</td>
           <td>Колличество</td>
-          <td></td>
+          {% if current_user.role_id == 1 or current_user.role_id == 2 %}
+          <td>Действие</td>
+          {% endif %}
         </tr>
   </thead>
   <tbody>
@@ -21,7 +29,7 @@
             <td>{{book.name}}</td>
             <td>{{book.author}}</td>
             <td>{{book.year}}</td>
-            <td>{{book.quantity}}</td>
+            <td>{{ book.quantity }} </td>
             {% if current_user.role_id == 1 %}
             <td>
               <div class="btn-group" role="group">
@@ -30,12 +38,14 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                   
-                  <a class="dropdown-item" href="#">Редактировать</a>
-                  <a class="dropdown-item" href="#">Удалить</a>
+                  <a class="dropdown-item" href="{{ url_for('main.set', id = book.id)}} ">Редактировать</a>
+                  <a class="dropdown-item" href="{{ url_for('main.delete_book', id = book.id)}} " >Удалить</a>
                 </div>
               </div>
            </td>
             {% endif %}
+
+
             {% if current_user.role_id == 2 %}
                 <td>
               <div class="btn-group" role="group">
@@ -44,7 +54,7 @@
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                   
-                  <a class="dropdown-item" href="#">Редактировать</a>
+                  <a class="dropdown-item" href="{{ url_for('main.set', id = book.id)}} ">Редактировать</a>
                 </div>
               </div>
            </td>
@@ -75,12 +85,16 @@
 
           
           {%  endfor %}
+
         </tbody>
         
       </table>
-
+      {% if current_user.role_id == 1%}
+      <a href="{{ url_for('main.add_book')}} ">
+              <button type="button" class="btn btn-success">Добавить книгу</button>
+            </a>
+      {% endif %}
 {% if current_user.is_authenticated %}
-
 
 
 {% else %}

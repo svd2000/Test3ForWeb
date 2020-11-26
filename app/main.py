@@ -61,7 +61,7 @@ def add_book():
         return redirect(url_for('main.index'))
 
     else:
-        return render_template('add.html')
+        return render_template("add.html")
 
 @main.route('/add/<id>',methods=['POST','GET'])
 def add(id):
@@ -127,6 +127,19 @@ def delete_book(id):
         db.session.commit()
     return redirect(url_for('main.issue', userbooks=userbooks))   
 
+@main.route('/change_user/<id>',methods=['POST','GET'])
+def change_user(id):
+    if request.method == "POST":
+        id = id
+        new_user = request.form['new_user']
+
+        rows3 = UsersBook.query.filter_by(id = id).update({'user': new_user })
+        
+        db.session.commit()
+        return redirect(url_for('main.issue'))
+    else:
+        user_list = User.query.order_by(User.id)
+        return render_template('set2.html',user_list=user_list,main_id = id)
 
 @main.route('/set/<id>',methods=['POST','GET'])
 def set(id):

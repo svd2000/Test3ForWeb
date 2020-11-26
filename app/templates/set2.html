@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if error %}
+<div class="alert alert-danger" role="alert">
+  {{ error }}
+</div>
+{% endif %}
+
+{% if current_user.role_id == 1 %}
+<form class="from" action="{{url_for('main.change_user', id = main_id)}}" method="POST">
+<label for="sel1">Пользователь:</label>
+
+<select class="form-control" name="new_user" id="sel1" >
+    {% for user in user_list %}
+    <option value ='{{user.id}}' >{{user.login}}</option>
+    {% endfor %}
+  </select>
+
+<input type="submit" class="btn btn-primary" >
+  {% endif %}
+  
+{% endblock %}

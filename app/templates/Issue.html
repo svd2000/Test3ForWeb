@@ -2,8 +2,52 @@
 
 {% block content %}
 
+{% if current_user.role_id == 1 %}
+<h1>Журнал выдачи:</h1>
+<table class="table table-dark">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+   
+      <th scope="col">ФИО</th>
+      <th scope="col">Название книги</th>
+      <th scope="col">Автор</th>
+      <th scope="col">Статус</th>
+      <th scope="col"></th>
+    
+    </tr>
+  </thead>
+  <tbody>
+    {% for check_book in user_list %}
+    <tr>
+     
+      <td>{{ userbooks.query.filter_by(id = check_book.id).first().id }}</td>
+      <td>{{ user.query.filter_by(id = check_book.user).first().fullname }}</td>
+      <td>{{ book.query.filter_by(id = check_book.book).first().name }}</td>
+      <td>{{ book.query.filter_by(id = check_book.book).first().author }}</td>
+      <td>{{ status.query.filter_by(id = check_book.status).first().condition }}</td>
+      <td>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Действия
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="{{ url_for('main.change_user', id = check_book.id)}}">Изменить пользователя</a>
+           
+          </div>
+        </div>
+        </td>
 
-{% if current_user.is_authenticated %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endif %}
+
+
+{% if current_user.role_id == 2 or current_user.role_id == 3 %}
 <form class="from" action="{{url_for('main.delete', id = userbooks.id)}}" method="POST">
 <h1>Журнал выдачи:</h1>
 <table class="table table-dark">
@@ -36,7 +80,7 @@
             Действия
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" href="{{ url_for('main.delete', id = book.id)}}">Удалить</a>
+            <a class="dropdown-item" href="{{ url_for('main.delete', id = check_book.id)}}">Удалить</a>
            
           </div>
         </div>
@@ -55,9 +99,9 @@
 </form>
 {% else %}
 
-
+{% if not current_user.is_authenticated %}
 <h2>Для доступа к журналу выдачи необходимо авторизироваться. </h2>
-
+{% endif %}
 {% endif %}
 
 {% endblock %}
